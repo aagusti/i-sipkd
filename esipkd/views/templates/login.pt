@@ -1,0 +1,10 @@
+<html metal:use-macro="load: base.pt">
+  <div metal:fill-slot="content">
+  <link rel="stylesheet" href="/static/css/signin.css">
+
+      <div class="container-fluid">
+        <h2 class="form-signin-heading">Login</h2>
+          <div tal:content="structure form"/>
+        </div>
+      </div> <!-- /container -->
+</html>

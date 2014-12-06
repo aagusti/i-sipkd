@@ -1,0 +1,39 @@
+<html metal:use-macro="load: ../base.pt">
+
+<div metal:fill-slot="content">
+<h1>SPTPD</h1>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>No. Bayar</th>
+            <th>Tahun</th>
+            <th>Bulan</th>
+            <th>Omset</th>
+            <th>Tarif</th>
+            <th>Pokok Pajak</th>
+            <th>Bayar</th>
+            <th colspan="2"/>
+        </tr>
+    </thead>
+    <tbody>
+        <tr tal:repeat="row rows">
+            <td>${row.id}</td>
+            <td>${row.no_bayar}</td>
+            <td>${row.tahun}</td>
+            <td>${row.bulan}</td>
+            <td>${row.omset}</td>
+            <td>${row.tarif}</td>
+            <td>${row.pokok_pajak}</td>
+            <td tal:condition="row.status_bayar">Lunas</td>
+            <td tal:condition="not row.status_bayar">Terutang</td>
+            <td tal:condition="not row.status_bayar"><a href="/pbbkb/${row.id}/edit">Edit</td>
+            <td tal:condition="not row.status_bayar"><a href="/user/${row.id}/delete">Delete</td>
+        </tr>
+    </tbody>
+</table>
+<a href="/pbbkb/add" class="btn">Tambah</a>
+</div>
+
+</html>

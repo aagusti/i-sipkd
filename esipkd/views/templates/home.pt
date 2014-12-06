@@ -1,0 +1,31 @@
+<html metal:use-macro="load: base.pt">
+<div metal:fill-slot="content">
+
+<!-- Main component for a primary marketing message or call to action -->
+<div class="well">
+<h1>i-SIPKD</h1>
+<p><img src="/static/img/logo.png" class="img-float img-thumbnail"/>
+Selamat datang di aplikasi i-SIPKD
+
+<p>Aplikasi i-SIPKD adalah sub system dari aplikasi e-gov di Propinsi Jawa Barat.
+   Melalui Aplikasi ini diharapkan pelayanan kepada masyarakat semakin meningkat 
+   khususnya kepada masyarakat pembayar pajak, yang terdiri dari:</p>
+<p>
+   <ul>
+   <li>Pajak Kendaraan Bermotor</li>
+   <li>Pajak Bahan Bakar Kendaraan Bermotor </li>
+   <li>Hibah Masyarakat/Lembaga Swasta</li>
+   <li>Pendapatan Lainnya</li>
+   </ul>
+</p>
+<p>Aplikasi i-SIPKD ini terselenggara atas kerjasama:</p>
+ <ul>
+   <li>Pemerintah Propinsi Jawa Barat,</li>
+   <li>Kepolisian Daerah Jawa Barat,</li> 
+   <li>PT. Jasa Raharja Persero,</li> 
+   <li>PT. Bank Pembangunan Daerah Jawa Barat (Bank BJB)</li>
+   
+</div><!--well-->
+
+</div>
+</html>
