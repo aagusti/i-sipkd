@@ -17,8 +17,7 @@
 .navbar-inverse {
   --background-color: #bc2131;
   --background-color: #00AA00;
-  background-color: #009963;
-  
+  background-color: #009963;  
   border-color: #911926;
 }
 .navbar-inverse .navbar-brand {
