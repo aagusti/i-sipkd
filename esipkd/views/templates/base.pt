@@ -57,7 +57,8 @@
                 <li><a href="/skpd">SKPD/Unit</a></li>
               </ul>
             </li>
-            
+          </ul>
+           <ul class="nav navbar-nav pull-right"> 
             <li tal:condition="request.user"  class="dropdown" tal:attributes="class request.path in ['/password'] and 'active'">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account <b class="caret"></b></a>
               <ul class="dropdown-menu">
