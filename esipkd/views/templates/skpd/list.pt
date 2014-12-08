@@ -6,14 +6,6 @@
 
 <h4>SKPD/Unit Kerja</h4>
 <hr>
-<div class="container">
-<!--form class="form-inline" role="form" id="frm_upload" name="frm_upload">
-    <label for="upload" class="control-label">Upload:</label>
-    <input type="text" class="form-control" id="upload">
-    <button type="submit" class="btn btn-default">Upload</button>
-</form-->
-</div>
-<p>
 <table id="table1" name="table1" class="table table-bordered table-hover table-condensed" >
     <thead>
         <tr>
@@ -61,10 +53,10 @@
 
           "aoColumns": [
               null, 
-              {"sWidth": "200px" }, 
+              {"sWidth": "50px" }, 
               null, 
-              {"sWidth": "100px", "sClass": "center"}, 
-              {"sWidth": "100px", "sClass": "center"}
+              {"sWidth": "50px", "sClass": "center"}, 
+              {"sWidth": "50px", "sClass": "center"}
           ],
       });
 

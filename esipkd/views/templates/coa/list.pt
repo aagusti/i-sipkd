@@ -61,10 +61,10 @@
 
           "aoColumns": [
               null, 
-              {"sWidth": "200px" }, 
+              {"sWidth": "50px" }, 
               null, 
-              {"sWidth": "100px", "sClass": "center"}, 
-              {"sWidth": "100px", "sClass": "center"}
+              {"sWidth": "50px", "sClass": "center"}, 
+              {"sWidth": "50px", "sClass": "center"}
           ],
       });
 

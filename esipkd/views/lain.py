@@ -80,18 +80,17 @@ def get_units():
     
 def get_rekenings():
     q = DBSession.query(RekeningModel.id,RekeningModel.uraian).filter(
-          RekeningModel.kode.like('4.1.1.05.%')
+          RekeningModel.kode.like('4.3.1.03.02.%'), RekeningModel.is_summary==0
         ).filter(RekeningModel.is_summary==0).order_by(RekeningModel.uraian)
     return q.all()
     
-class PeriodeSchema(colander.Schema):
-    tahun = colander.SchemaNode(
-                    colander.Integer(),
-                    default = get_periode())
-    bulan = colander.SchemaNode(
-                    colander.Integer(),
-                    default = get_periode(False),
-                    widget=widget.SelectWidget(values=BULANS),)
+class InformasiSchema(colander.Schema):
+    nama = colander.SchemaNode(
+                    colander.String())
+    alamat_1 = colander.SchemaNode(
+                    colander.String())
+    alamat_2 = colander.SchemaNode(
+                    colander.String())
             
 class AddSchema(colander.Schema):
     """appstruct = {
@@ -118,23 +117,24 @@ class AddSchema(colander.Schema):
                     widget=widget.SelectWidget(values=get_rekenings()),
                     title = "Rekening"
                   )
-    periode = PeriodeSchema()              
+    informasi = InformasiSchema()              
     omset = colander.SchemaNode(
                     colander.Decimal(),
                     widget=widget.MoneyInputWidget(
-                           size=20, options={'allowZero':False})
+                           size=20, options={'allowZero':False}),
+                    title="Nilai"
                     )
     tarif = colander.SchemaNode(
                     colander.Decimal(),
-                    widget=widget.MoneyInputWidget(
-                           size=20, options={'allowZero':False})
+                    widget=widget.HiddenWidget(
+                           size=20, options={'allowZero':False},
+                           default=1)
                     )
 
     pokok_pajak = colander.SchemaNode(
                     colander.Integer(),
-                    widget=widget.MoneyInputWidget(
-                           size=20, options={'allowZero':False})
-                    )
+                    widget=widget.HiddenWidget(),
+                    default=0)
 
 def get_form(request, class_form):
     schema = class_form(validator=form_validator)
@@ -173,7 +173,7 @@ def session_failed(request, session_name):
 ########                    
 # List #
 ########    
-@view_config(route_name='pbbkb', renderer='templates/pbbkb/list.pt',
+@view_config(route_name='lain', renderer='templates/lain/list.pt',
              permission='view')
 def view_list(request):
     #print request.user.id
@@ -184,7 +184,7 @@ def view_list(request):
 ########                    
 # Add #
 ########    
-@view_config(route_name='pbbkb-add', renderer='templates/pbbkb/add.pt',
+@view_config(route_name='lain-add', renderer='templates/lain/add.pt',
              permission='add')
 def view_add(request):
     form = get_form(request, AddSchema)
@@ -195,7 +195,7 @@ def view_add(request):
                 c = form.validate(controls)
             except ValidationFailure, e:
                 request.session[SESS_ADD_FAILED] = e.render()               
-                return HTTPFound(location=request.route_url('pbbkb-add'))
+                return HTTPFound(location=request.route_url('lain-add'))
             save_request(dict(controls), request)
         return route_list(request)
     elif SESS_ADD_FAILED in request.session:
@@ -213,7 +213,7 @@ def id_not_found(request):
     request.session.flash(msg, 'error')
     return route_list(request)
 
-@view_config(route_name='pbbkb-edit', renderer='templates/pbbkb/edit.pt',
+@view_config(route_name='lain-edit', renderer='templates/lain/edit.pt',
              permission='edit')
 def view_edit(request):
     row = query_id(request).first()
@@ -227,7 +227,7 @@ def view_edit(request):
                 c = form.validate(controls)
             except ValidationFailure, e:
                 request.session[SESS_EDIT_FAILED] = e.render()               
-                return HTTPFound(location=request.route_url('pbbkb-edit',
+                return HTTPFound(location=request.route_url('lain-edit',
                                   id=row.id))
             save_request(dict(controls), request, row)
         return route_list(request)
@@ -239,7 +239,7 @@ def view_edit(request):
 ##########
 # Delete #
 ##########    
-@view_config(route_name='pbbkb-delete', renderer='templates/pbbkb/delete.pt',
+@view_config(route_name='lain-delete', renderer='templates/lain/delete.pt',
              permission='delete')
 def view_delete(request):
     q = query_id(request)
@@ -260,7 +260,7 @@ def view_delete(request):
 ##########
 # Action #
 ##########    
-@view_config(route_name='pbbkb-act', renderer='json',
+@view_config(route_name='lain-act', renderer='json',
              permission='view')
 def view_act(request):
     req      = request

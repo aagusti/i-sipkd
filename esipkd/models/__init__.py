@@ -25,6 +25,7 @@ from pyramid.security import (
     Allow,
     Authenticated,
     Everyone,
+    ALL_PERMISSIONS
     )
 from ..tools import as_timezone
 
@@ -209,10 +210,13 @@ class ExternalIdentity(ExternalIdentityMixin, Base):
 class RootFactory(object):
     def __init__(self, request):
         self.__acl__ = [
+            (Allow, Authenticated, 'delete'),
             (Allow, Authenticated, 'view'),
             (Allow, Authenticated, 'edit'),
-            (Allow, 'Admin', 'view'),
-            (Allow, 'Admin', 'edit'),
+            (Allow, Authenticated, 'add'),
+            (Allow, Authenticated, 'delete'),
+            
+            (Allow, 'Admin', ALL_PERMISSIONS),
             (Allow, 'Staff', 'view'),
             (Allow, Everyone, 'view'),
             
