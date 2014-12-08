@@ -70,6 +70,7 @@ routes = [
     ('user-add', '/user/add', 'Add user'),
     ('user-edit', '/user/{id}/edit', 'Edit user'),
     ('user-delete', '/user/{id}/delete', 'Delete user'),   
+    
     ('pkb', '/pkb', 'Pajak Kendaraan Bermotor'),     
     ('pkb-add', '/pkb/add', 'Pajak Kendaraan Bermotor'),     
     ('pbbkb', '/pbbkb', 'Groups'),
@@ -81,6 +82,24 @@ routes = [
     ('lain', '/lain', 'Groups'),
     ('lain-add', '/lain/add', 'Add group'),
     ('lain-edit', '/lain/{id}/edit', 'Edit group'),    
+
+    ('coa', '/coa', 'COA'),
+    ('coa-act', '/coa/act/{act}', ''),
+    ('coa-add', '/coa/add', 'Tambah COA'),
+    ('coa-edit', '/coa/{id}/edit', 'Edit COA'),
+    ('coa-delete', '/coa/{id}/delete', 'Edit COA'),
+
+    ('skpd', '/skpd', 'SKPD/Unit'),
+    ('skpd-act', '/skpd/act/{act}', ''),
+    ('skpd-add', '/skpd/add', 'Tambah SKPD/Unit'),
+    ('skpd-edit', '/skpd/{id}/edit', 'Edit SKPD/Unit'),
+    ('skpd-delete', '/skpd/{id}/delete', 'Edit SKPD/Unit'),
+
+    ('group', '/group', 'Group'),
+    ('group-act', '/group/act/{act}', ''),
+    ('group-add', '/group/add', 'Tambah Group'),
+    ('group-edit', '/group/{id}/edit', 'Edit Group'),
+    ('group-delete', '/group/{id}/delete', 'Edit Group'),
     ]
 
 main_title = 'esipkd'
