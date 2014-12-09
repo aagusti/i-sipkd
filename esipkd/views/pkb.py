@@ -1,30 +1,15 @@
-from email.utils import parseaddr
-from sqlalchemy import not_
-from pyramid.view import (
-    view_config,
-    )
-from pyramid.httpexceptions import (
-    HTTPFound,
-    )
 import colander
-from deform import (
-    Form,
-    widget,
-    ValidationFailure,
-    )
-    
-from ..tools import (
-    email_validator
-    )
-    
-from ..models import (
-    DBSession
-    )
-    
-    
-from ..models.isipkd import (
-    PkbModel
-    )
+from datetime import (datetime, date)
+from time import (strptime, strftime)
+from sqlalchemy import (not_, or_)
+from pyramid.view import (view_config,)
+from pyramid.httpexceptions import (HTTPFound,)
+from deform import (Form, widget, ValidationFailure,)
+from datatables import (ColumnDT, DataTables)
+
+from ..tools import (email_validator,BULANS)
+from ..models import (DBSession)
+from ..models.isipkd import (PkbModel)
 
 SESS_ADD_FAILED = 'user add failed'
 SESS_EDIT_FAILED = 'user edit failed'
@@ -57,7 +42,8 @@ def form_validator(form, value):
 class AddSchema(colander.Schema):
     no_rangka = colander.SchemaNode(
                     colander.String(),
-                    size=16
+                    widget =  widget.TextInputWidget(max=5),
+                    validator=form_validator
                     )
     nik = colander.SchemaNode(
                     colander.String()
@@ -77,28 +63,19 @@ class AddSchema(colander.Schema):
 
 def get_form(request, class_form):
     schema = class_form(validator=form_validator)
-    #schema = schema.bind(daftar_status=STATUS)
     schema.request = request
     return Form(schema, buttons=('simpan','batal'))
     
 def save(values, user, row=None):
-    """if not row:
-        row = User()
-    row.from_dict(values)
-    if values['password']:
-        row.password = values['password']
-    DBSession.add(row)
-    DBSession.flush()
-    return row
-    """
     row = {}
     row['email'] = 'aagusti@1'
     return row
+    
 def save_request(values, request, row=None):
     if 'id' in request.matchdict:
         values['id'] = request.matchdict['id']
     row = save(values, request.user, row)
-    request.session.flash('Tunggu beberpa saat.')
+    request.session.flash('Tunggu beberapa saat email atau SMS akan segera dikirim.')
         
 def route_list(request):
     return HTTPFound(location=request.route_url('pkb'))

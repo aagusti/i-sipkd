@@ -27,6 +27,10 @@ from pyramid.security import (
     Everyone,
     ALL_PERMISSIONS
     )
+from pyramid.httpexceptions import (
+    HTTPFound, HTTPNotFound
+    )
+    
 from ..tools import as_timezone
 
 
@@ -209,9 +213,11 @@ class ExternalIdentity(ExternalIdentityMixin, Base):
 
 class RootFactory(object):
     def __init__(self, request):
+        self.__name__ = ''
         self.__acl__ = [
             (Allow, Authenticated, 'delete'),
             (Allow, Authenticated, 'view'),
+            (Allow, Authenticated, 'read'),
             (Allow, Authenticated, 'edit'),
             (Allow, Authenticated, 'add'),
             (Allow, Authenticated, 'delete'),
@@ -222,6 +228,41 @@ class RootFactory(object):
             
             ]
 
+class UserResourceFactory(object):
+    def __init__(self, request):
+        self.__acl__ = []
+        rid = request.matchdict.get("resource_id") or 1
+
+        if not rid:
+            raise HTTPNotFound()
+        self.resource = Resource.by_resource_id(rid)
+        if not self.resource:
+            raise HTTPNotFound()
+        if self.resource and request.user:
+            # append basic resource acl that gives all permissions to owner
+            self.__acl__ = self.resource.__acl__
+            # append permissions that current user may have for this context resource
+            for perm_user, perm_name in self.resource.perms_for_user(request.user):
+                self.__acl__.append((Allow, perm_user, perm_name,))
+
+class GroupResourceFactory(object):
+    def __init__(self, request):
+        self.__acl__ = [(Allow,'Admin',ALL_PERMISSIONS),
+                        (Allow, Everyone, 'view'),]
+        rid = request.matchdict.get("resource_id") or 1
+        if not rid:
+            raise HTTPNotFound()
+        self.resource = Resource.by_resource_id(rid)
+        if not self.resource:
+            raise HTTPNotFound()
+        if self.resource and request.user:
+            #groups = group_finder(request.user)
+            # append basic resource acl that gives all permissions to owner
+            self.__acl__ = self.resource.__acl__
+            # append permissions that current user may have for this context resource
+            for perm_group, perm_name in self.resource.perms_for_group(request.user):
+                self.__acl__.append((Allow, 'g:%s' % perm_group, perm_name,))
+                
 def init_model():
     ziggurat_model_init(User, Group, UserGroup, GroupPermission, UserPermission,
                    UserResourcePermission, GroupResourcePermission, Resource,

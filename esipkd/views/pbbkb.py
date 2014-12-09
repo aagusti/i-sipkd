@@ -174,7 +174,7 @@ def session_failed(request, session_name):
 # List #
 ########    
 @view_config(route_name='pbbkb', renderer='templates/pbbkb/list.pt',
-             permission='view')
+             permission='read')
 def view_list(request):
     #print request.user.id
     #rows = DBSession.query(SptpdModel).filter(SptpdModel.create_uid==request.user.id).order_by('tahun','bulan')

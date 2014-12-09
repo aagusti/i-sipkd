@@ -1,30 +1,36 @@
+import pytz    
+import transaction
+import colander
 from datetime import datetime
 from email.utils import parseaddr
 from pyramid.view import view_config
-from pyramid.httpexceptions import (
-    HTTPFound,
-    HTTPForbidden,
-    )
-import pytz    
-from pyramid.security import (
-    remember,
-    forget,
-    authenticated_userid,
-    )
-import transaction
-import colander
+from pyramid.httpexceptions import (HTTPFound, HTTPForbidden, HTTPNotFound)
+from pyramid.security import (remember, forget, authenticated_userid,)
+from deform import (Form, ValidationFailure, widget,)
 
-from deform import (
-    Form,
-    ValidationFailure,
-    widget,
-    )
-from ..models import (
-    DBSession,
-    User,
-    )
+from ..models import (DBSession, User,)
+from pyramid.view import notfound_view_config
+
+###############################################################################
+# Not Found
+###############################################################################
+
+@view_config(context=HTTPNotFound, renderer='templates/login.pt')
+def not_found(self, request):
+    request.response.status = 404
+    print request
+    return dict(request=request)
 
 
+###############################################################################
+# Not Found
+###############################################################################
+
+@view_config(route_name='forbidden', renderer='templates/forbidden.pt')
+def not_found(self, request):
+    #request.response.status = 404
+    return dict(request=request)
+    
 ########
 # Home #
 ########
@@ -65,7 +71,15 @@ def get_login_headers(request, user):
 @view_config(route_name='login', renderer='templates/login.pt')
 def view_login(request):
     if authenticated_userid(request):
-        return HTTPFound(location=request.route_url('home'))
+        return HTTPFound(location=request.route_url('forbidden'))
+    
+    login_url = request.resource_url(request.context,'login')
+    referrer = request.url
+   
+    if referrer == login_url:
+        referrer = '/'
+            
+    came_from = request.params.get('came_from', referrer)
     schema = Login(validator=login_validator)
     form = Form(schema, buttons=('login',))
     if 'login' in request.POST: 
@@ -76,15 +90,17 @@ def view_login(request):
             c = form.validate(controls)
         except ValidationFailure, e:
             request.session['login failed'] = e.render()
-            return HTTPFound(location=request.route_url('login'))
-        headers = get_login_headers(request, user)        
-        return HTTPFound(location=request.route_url('home'),
+            return HTTPFound(location=came_from) #location.request.route_url('login')
+                    
+            
+        headers = get_login_headers(request, user)
+        return HTTPFound(location=came_from, # request.route_url(came_from),
                           headers=headers)
     elif 'login failed' in request.session:
         r = dict(form=request.session['login failed'])
         del request.session['login failed']
-        print '***',r
         return r
+        
     return dict(form=form.render())
 
 @view_config(route_name='logout')

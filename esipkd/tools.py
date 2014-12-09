@@ -1,5 +1,7 @@
 import os
 import re
+from email.utils import parseaddr
+import colander
 from types import (
     IntType,
     LongType,

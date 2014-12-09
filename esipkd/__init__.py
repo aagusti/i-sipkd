@@ -9,7 +9,7 @@ from pyramid.events import BeforeRender
 from pyramid.interfaces import IRoutesMapper
 from pyramid.httpexceptions import (
     default_exceptionresponse_view,
-    HTTPFound,
+    HTTPFound, HTTPNotFound
     )
 
 from sqlalchemy import engine_from_config
@@ -59,12 +59,14 @@ def add_global(event):
 
 def get_title(request):
     route_name = request.matched_route.name
-    return titles[route_name]
-
+    #return titles[route_name]
+    return  None
 routes = [    
     ('home', '/', 'Home'),
     ('login', '/login', 'Login'),
     ('logout', '/logout', None),
+    ('forbidden', '/forbidden', 'Forbidden'),
+    
     ('password', '/password', 'Change password'),
     ('user', '/user', 'Users'),
     ('user-add', '/user/add', 'Add user'),
@@ -133,7 +135,7 @@ def main(global_config, **settings):
     if 'timezone' not in settings:
         settings['timezone'] = DefaultTimeZone
     config = Configurator(settings=settings,
-                          root_factory='esipkd.models.RootFactory',
+                          root_factory='esipkd.models.UserResourceFactory', #'esipkd.models.RootFactory',
                           session_factory=session_factory)
     config.include('pyramid_beaker')                          
     config.include('pyramid_chameleon')
@@ -145,7 +147,7 @@ def main(global_config, **settings):
     config.set_authorization_policy(authz_policy)
     config.add_request_method(get_user, 'user', reify=True)
     config.add_request_method(get_title, 'title', reify=True)
-    config.add_notfound_view(RemoveSlashNotFoundViewFactory())        
+    #config.add_notfound_view(RemoveSlashNotFoundViewFactory())        
                           
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('deform_static', 'deform:static')

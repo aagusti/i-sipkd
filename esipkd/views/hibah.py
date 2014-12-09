@@ -1,39 +1,17 @@
+import colander
 from email.utils import parseaddr
 from datetime import (datetime, date)
 from time import (strptime, strftime)
 from sqlalchemy import (not_, or_)
-from pyramid.view import (
-    view_config,
-    )
-from pyramid.httpexceptions import (
-    HTTPFound,
-    )
-import colander
-from deform import (
-    Form,
-    widget,
-    ValidationFailure,
-    )
-    
-from ..tools import (
-    email_validator,
-    BULANS
-    )
-    
-from ..models import (
-    DBSession
-    )
-    
-    
-from ..models.isipkd import (
-    SptpdModel,
-    UnitModel,
-    RekeningModel,
-    UnitRekeningModel,
-    )
-    
-from datatables import (
-    ColumnDT, DataTables)
+from pyramid.view import (view_config,)
+from pyramid.httpexceptions import (HTTPFound,)
+from deform import (Form, widget, ValidationFailure,)
+from datatables import (ColumnDT, DataTables)
+
+from ..tools import (email_validator,BULANS)
+from ..models import (DBSession)
+from ..models.isipkd import (SptpdModel, UnitModel,RekeningModel,
+        UnitRekeningModel,)
 
 SESS_ADD_FAILED = 'gagal tambah data'
 SESS_EDIT_FAILED = 'gagal edit data'
@@ -41,7 +19,6 @@ SESS_EDIT_FAILED = 'gagal edit data'
 #######    
 # Add #
 #######
-
 def form_validator(form, value):
     def err_no_rangka():
         raise colander.Invalid(form,
@@ -174,7 +151,7 @@ def session_failed(request, session_name):
 # List #
 ########    
 @view_config(route_name='hibah', renderer='templates/hibah/list.pt',
-             permission='view')
+             permission='exec')
 def view_list(request):
     #print request.user.id
     #rows = DBSession.query(SptpdModel).filter(SptpdModel.create_uid==request.user.id).order_by('tahun','bulan')
